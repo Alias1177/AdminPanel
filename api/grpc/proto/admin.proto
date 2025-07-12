@@ -1,0 +1,97 @@
+syntax = "proto3";
+
+package admin;
+
+option go_package = "grpc/proto/admin";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto"; // на случай пустых запросов
+import "google/protobuf/wrappers.proto"; // если хочешь оборачивать string/int/etc
+import "google/protobuf/timestamp.proto"; // на будущее — если появится время
+
+// Основной сервис
+service AdminPanel {
+  rpc CheckTotalBalance(CheckBalanceRequest) returns (CheckBalanceResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/balance"
+    };
+  }
+
+  rpc CheckCleanYield(CheckYieldRequest) returns (CheckYieldResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/yield"
+    };
+  }
+
+  rpc CheckDriverData(DataDriverRequest) returns (DataDriverResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/driver"
+    };
+  }
+
+  rpc CheckClientData(DataClientRequest) returns (DataClientResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/client"
+    };
+  }
+
+  rpc RegisterAdmin(RegReq) returns (RegResp) {
+    option (google.api.http) = {
+      post: "/api/v1/registration"
+      body: "*"
+    };
+  }
+
+  rpc LoginAdmin(LoginReq) returns (LoginResp) {
+    option (google.api.http) = {
+      post: "/api/v1/login"
+      body: "*"
+    };
+  }
+}
+
+// Регистрация
+message RegReq {
+  string email = 1;
+  string password = 2;
+}
+message RegResp {
+  string response = 1;
+}
+
+// Логин
+message LoginReq {
+  string email = 1;
+  string password = 2;
+}
+message LoginResp {
+  string response = 1;
+}
+
+// Баланс
+message CheckBalanceRequest {}
+message CheckBalanceResponse {
+  string balance = 1;
+}
+
+// Доход
+message CheckYieldRequest {}
+message CheckYieldResponse {
+  string yield = 1; // исправлена опечатка "yeld"
+}
+
+// Драйвер
+message DataDriverRequest {
+  string id = 1; // Заменяем uuid.UUID на string (UUID — это string в протобафе)
+}
+message DataDriverResponse {
+  string driverInfo = 1;
+}
+
+// Клиент
+message DataClientRequest {
+  string id = 1;
+}
+message DataClientResponse {
+  string clientInfo = 1;
+}
