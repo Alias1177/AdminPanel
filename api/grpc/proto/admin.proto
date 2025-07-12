@@ -77,12 +77,12 @@ message CheckBalanceResponse {
 // Доход
 message CheckYieldRequest {}
 message CheckYieldResponse {
-  string yield = 1; // исправлена опечатка "yeld"
+  string yield = 1;
 }
 
 // Драйвер
 message DataDriverRequest {
-  string id = 1; // Заменяем uuid.UUID на string (UUID — это string в протобафе)
+  string id = 1;
 }
 message DataDriverResponse {
   string driverInfo = 1;
