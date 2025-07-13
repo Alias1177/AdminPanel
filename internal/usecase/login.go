@@ -2,15 +2,24 @@ package usecase
 
 import (
 	pb "AdminPanel/generated/go/proto"
-	"AdminPanel/internal/domain/entities"
+	"AdminPanel/internal/domain/services"
 	"context"
 )
 
-type LoginAdmin struct {
-	entities.AdminPanel
+type Login struct {
+	loginService services.LoginService
 }
 
-func (l *LoginAdmin) LoginAdmin(ctx context.Context, req *pb.LoginReq) (*pb.LoginResp, error) {
+func NewLoginUseCase(loginService services.LoginService) *Login {
+	return &Login{loginService: loginService}
+}
 
-	return &pb.LoginResp{}, nil
+func (l *Login) LoginAdmin(ctx context.Context, req *pb.LoginReq) (*pb.LoginResp, error) {
+	login, err := l.loginService.Login(ctx, req.Email, req.Password)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.LoginResp{
+		Response: login,
+	}, nil
 }

@@ -2,8 +2,8 @@ package main
 
 import (
 	"AdminPanel/config"
+	grpc "AdminPanel/internal/interfaces/grpc/fetch"
 	"AdminPanel/internal/interfaces/grpc/grpcserver"
-	grpc "AdminPanel/internal/interfaces/grpc/handlers"
 	"AdminPanel/internal/interfaces/http/handlers"
 	"AdminPanel/internal/usecase"
 	"log"
@@ -12,12 +12,24 @@ import (
 
 func main() {
 	cfg, err := config.Load()
-	balanceFetcher := &handlers.GetBalance{
-		ApiURL: cfg.ApiUrl,
-	}
-	balanceUC := usecase.NewBalanceUseCase(balanceFetcher)
-	adminHandler := grpc.NewAdminGRPCHandler(balanceUC)
 
+	balanceUC := usecase.NewBalanceUseCase(&handlers.GetBalance{
+		ApiURL: cfg.ApiUrl,
+	})
+
+	loginFetcher := usecase.NewLoginUseCase(&handlers.LoginUs{
+		ApiUrl: cfg.ApiUrl,
+	})
+
+	driverData := usecase.NewDriverUseCase(&handlers.DriverReq{
+		ApiUrl: cfg.ApiUrl,
+	})
+
+	clientData := usecase.NewClientUseCase(&handlers.ClientReq{
+		ApiUrl: cfg.ApiUrl,
+	})
+
+	adminHandler := grpc.NewAdminGRPCHandler(balanceUC, loginFetcher, driverData, clientData)
 	grpcServer := grpcserver.NewGRPCServer(adminHandler)
 
 	lis, err := net.Listen("tcp", ":50051")

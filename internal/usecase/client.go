@@ -2,14 +2,24 @@ package usecase
 
 import (
 	pb "AdminPanel/generated/go/proto"
-	"AdminPanel/internal/domain/entities"
+	"AdminPanel/internal/domain/services"
 	"context"
 )
 
 type Client struct {
-	entities.AdminPanel
+	client services.ClientService
+}
+
+func NewClientUseCase(client services.ClientService) *Client {
+	return &Client{client: client}
 }
 
 func (c *Client) CheckClientData(ctx context.Context, req *pb.DataClientRequest) (*pb.DataClientResponse, error) {
-	return &pb.DataClientResponse{}, nil
+	client, err := c.client.GetClientData(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.DataClientResponse{
+		ClientInfo: client,
+	}, nil
 }

@@ -1,4 +1,3 @@
-// internal/interfaces/grpc/server.go
 package grpcserver
 
 import (
