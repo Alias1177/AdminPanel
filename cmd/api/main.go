@@ -13,7 +13,7 @@ import (
 func main() {
 	cfg, err := config.Load()
 
-	balanceUC := usecase.NewBalanceUseCase(&handlers.GetBalance{
+	balanceUC := usecase.NewBalanceUseCase(&handlers.GetBalances{
 		ApiURL: cfg.ApiUrl,
 	})
 
@@ -29,7 +29,11 @@ func main() {
 		ApiUrl: cfg.ApiUrl,
 	})
 
-	adminHandler := grpc.NewAdminGRPCHandler(balanceUC, loginFetcher, driverData, clientData)
+	yieldUC := usecase.NewYieldUseCase(&handlers.Yields{
+		ApiURL: cfg.ApiUrl,
+	})
+
+	adminHandler := grpc.NewAdminGRPCHandler(balanceUC, loginFetcher, driverData, clientData, yieldUC)
 	grpcServer := grpcserver.NewGRPCServer(adminHandler)
 
 	lis, err := net.Listen("tcp", ":50051")

@@ -5,17 +5,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 )
 
-type GetBalances struct {
+type Yields struct {
 	ApiURL string
 }
-type balanceResponse struct {
-	Balance string `json:"balance"`
-}
 
-func (g *GetBalances) GetBalance(ctx context.Context) (string, error) {
-	req, err := http.NewRequestWithContext(ctx, "GET", g.ApiURL, nil)
+func (y *Yields) GetCleanYield(ctx context.Context) (string, error) {
+	req, err := http.NewRequestWithContext(ctx, "GET", y.ApiURL, nil)
 	if err != nil {
 		return "", fmt.Errorf("Cant make request on api, error: %v", err)
 	}
@@ -31,6 +29,8 @@ func (g *GetBalances) GetBalance(ctx context.Context) (string, error) {
 	if err := json.NewDecoder(resp.Body).Decode(&parsed); err != nil {
 		return "", fmt.Errorf("failed to decode response: %w", err)
 	}
-
-	return parsed.Balance, nil
+	clean, _ := strconv.Atoi(parsed.Balance)
+	res := clean * 10 / 100
+	result := strconv.Itoa(res)
+	return result, nil
 }

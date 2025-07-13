@@ -32,3 +32,9 @@ type ClientService interface {
 type ClientUseCase interface {
 	CheckClientData(ctx context.Context, req *pb.DataClientRequest) (*pb.DataClientResponse, error)
 }
+type YieldService interface {
+	GetCleanYield(ctx context.Context) (string, error)
+}
+type YieldUseCase interface {
+	CheckCleanYield(ctx context.Context, req *pb.CheckYieldRequest) (*pb.CheckYieldResponse, error)
+}

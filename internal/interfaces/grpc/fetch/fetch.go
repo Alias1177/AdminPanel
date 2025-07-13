@@ -13,10 +13,11 @@ type AdminGRPCHandler struct {
 	loginUC   services.LoginUseCase
 	driverUC  services.DriverUseCase
 	client    services.ClientUseCase
+	yieldUC   services.YieldUseCase
 }
 
-func NewAdminGRPCHandler(bUC services.BalanceUseCase, loginUC services.LoginUseCase, driverUC services.DriverUseCase, client services.ClientUseCase) *AdminGRPCHandler {
-	return &AdminGRPCHandler{balanceUC: bUC, loginUC: loginUC, driverUC: driverUC, client: client}
+func NewAdminGRPCHandler(bUC services.BalanceUseCase, loginUC services.LoginUseCase, driverUC services.DriverUseCase, client services.ClientUseCase, yieldUC services.YieldUseCase) *AdminGRPCHandler {
+	return &AdminGRPCHandler{balanceUC: bUC, loginUC: loginUC, driverUC: driverUC, client: client, yieldUC: yieldUC}
 }
 
 func (h *AdminGRPCHandler) CheckTotalBalance(ctx context.Context, req *pb.CheckBalanceRequest) (*pb.CheckBalanceResponse, error) {
@@ -30,4 +31,10 @@ func (h *AdminGRPCHandler) CheckDriverData(ctx context.Context, req *pb.DataDriv
 }
 func (h *AdminGRPCHandler) CheckClientData(ctx context.Context, req *pb.DataClientRequest) (*pb.DataClientResponse, error) {
 	return h.client.CheckClientData(ctx, req)
+}
+func (h *AdminGRPCHandler) CheckCleanYield(ctx context.Context, req *pb.CheckYieldRequest) (*pb.CheckYieldResponse, error) {
+	return h.yieldUC.CheckCleanYield(ctx, req)
+}
+func (h *AdminGRPCHandler) GetCleanYield(ctx context.Context, req *pb.CheckYieldRequest) (*pb.CheckYieldResponse, error) {
+	return h.yieldUC.CheckCleanYield(ctx, req)
 }
